@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.SupercCatApp.R
 import com.example.SupercCatApp.adapter.CatAdapter
 import com.example.SupercCatApp.database.CatDB
-import com.example.SupercCatApp.models.ApiReponse
 import com.example.SupercCatApp.models.Cat
 import com.example.SupercCatApp.network.CatService
 import retrofit2.Call
@@ -67,21 +66,21 @@ class CatFragment : Fragment(), CatAdapter.OnItemClickListener{
         Log.d("Init load", "Init")
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.thecatapi.com/v1/images/search/")
+            .baseUrl("https://api.thecatapi.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val catService: CatService
         catService = retrofit.create(CatService::class.java)
-        val request = catService.getCats("f2dab074-28d8-4d41-9a23-3b04b9dd2431", query)
+        val request = catService.getCats("5", "10", "Desc")
 
-        request.enqueue(object : Callback<ApiReponse> {
+        request.enqueue(object : Callback<List<Cat> > {
 
-            override fun onFailure(call: Call<ApiReponse>, t: Throwable) {
+            override fun onFailure(call: Call<List<Cat> >, t: Throwable) {
                 Log.d("Activity Fail", "Error: "+t.toString())
             }
 
-            override fun onResponse(call: Call<ApiReponse>, responseDetails: Response<ApiReponse>) {
+            override fun onResponse(call: Call<List<Cat> >, responseDetails: Response<List<Cat> >) {
 
                 if (responseDetails.isSuccessful) {
                     println("Entro BIEN AL ONRESPONSE")
@@ -90,9 +89,9 @@ class CatFragment : Fragment(), CatAdapter.OnItemClickListener{
                     Log.d("Activity Success", responseDetails.raw().toString())
                     Log.d("Activity Success", responseDetails.body().toString())
 
-                    val cats: List<Cat> = responseDetails.body()!!.results ?: ArrayList()
+                    val cats: List<Cat> = responseDetails.body()!!?: ArrayList()
                     recyclerView.layoutManager = LinearLayoutManager(context)
-                    recyclerView.adapter = CatAdapter(cat, context, this@CatFragment)
+                    recyclerView.adapter = CatAdapter(cats, context, this@CatFragment)
                 } else {
                     Log.d("Activity Fail", "Error: " + responseDetails.code())
                     println("Entro al else en onResponse")

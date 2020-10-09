@@ -19,6 +19,6 @@ interface CatDAO {
     fun deleteCat(vararg movie: Cat)
 
     @Query("SELECT * FROM cats WHERE id = :id")
-    fun getACat(id: Int): Cat
+    fun getACat(id: String): Cat
 
 }

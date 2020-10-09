@@ -11,11 +11,13 @@ import java.io.Serializable
 data class Cat (
     @PrimaryKey
     @SerializedName("id")
-    val id : Int = 0,
-    @SerializedName("name")
-    val title : String,
-    @SerializedName("overview")
-    val overview: String
+    val id : String,
+    @SerializedName("url")
+    val url : String,
+    @SerializedName("width")
+    val width: String,
+    @SerializedName("height")
+    val height: String
 
 ) : Serializable{
 }
